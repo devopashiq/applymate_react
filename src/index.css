@@ -1,0 +1,42 @@
+@import "tailwindcss";
+@theme {
+  /* ─── Primary ─────────────────────────────── */
+  --color-primary:            #2e519e;
+  --color-primary-to:         #496ab9;   /* gradient end for buttons */
+  --color-primary-container:  #496ab9;   /* same as primary-to */
+  --color-on-primary:         #ffffff;   /* text on primary buttons */
+
+  /* ─── Tertiary (Offers / Green) ───────────── */
+  --color-tertiary:               #006058;
+  --color-tertiary-container:     #d0f0ec;
+  --color-on-tertiary-container:  #00201d;
+
+  /* ─── Secondary (Interview chips) ─────────── */
+  --color-secondary:              #5a5f72;
+  --color-secondary-container:    #dfe1f9;
+  --color-on-secondary-container: #171b2c;
+
+  /* ─── Surface Layers ───────────────────────── */
+  --color-surface:                  #f8f9ff;   /* Level 0 — page base */
+  --color-surface-low:              #eff4ff;   /* Level 1 — sidebar, panels */
+  --color-surface-lowest:           #ffffff;   /* Level 2 — cards, top layer */
+  --color-surface-container:        #e8edf8;   /* mid level sections */
+  --color-surface-container-high:   #dde3f0;   /* hover state background */
+  --color-surface-container-highest:#d2d9e8;   /* secondary button background */
+  --color-surface-variant:          #dde3f0;   /* Pending chip background */
+
+  /* ─── Text Colors ──────────────────────────── */
+  --color-on-surface:         #0b1c30;   /* ALL body text — never use #000 */
+  --color-on-surface-variant: #44546a;   /* secondary/meta text */
+
+  /* ─── Outline ──────────────────────────────── */
+  --color-outline-variant:    #c4cfe0;   /* ghost border — used at 15% opacity */
+
+  /* ─── Fonts ────────────────────────────────── */
+  --font-manrope: Manrope, sans-serif;   /* headings, display */
+  --font-inter:   Inter, sans-serif;     /* body, labels, inputs */
+
+
+
+  
+}
