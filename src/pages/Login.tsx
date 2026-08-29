@@ -1,16 +1,22 @@
 import { useState } from "react";
+import { authService } from "../service/auth.service";
+import { useAuth } from "../context/AuthContext";
+import { setToken } from "../service/token.service";
+import { useNavigate } from "react-router";
 
 interface FormData {
-  fullName: string;
+  name: string;
   email: string;
   password: string;
 }
 
 const Login = () => {
+  const { setLoginedUser } = useAuth();
+  const  navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(true);
   const [haveAccount, setHaveAccount] = useState(true);
   const [formData, setFormData] = useState<FormData>({
-    fullName: "",
+    name: "",
     email: "",
     password: "",
   });
@@ -20,9 +26,20 @@ const Login = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Submitted Data:", formData);
+
+    if (haveAccount) {
+      const { name, ...loginData } = formData;
+      const { user } = await authService.login(loginData);
+
+      setToken(user.accessToken);
+      setLoginedUser(user)
+      navigate('/dashboard')
+      ;
+    } else {
+      authService.signUp(formData);
+    }
   };
 
   function toggleHaveAccount() {
@@ -115,10 +132,10 @@ const Login = () => {
                     Full Name
                   </p>
                   <input
-                    value={formData.fullName}
+                    value={formData.name}
                     onChange={handleChangeInput}
                     type="text"
-                    name="fullName"
+                    name="name"
                     className="w-full px-3.5 py-2.5 text-sm border-[1.5px] border-gray-200 rounded-xl bg-gray-50 text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-100 transition-all"
                     placeholder="Alex Rivera"
                   />
@@ -129,6 +146,7 @@ const Login = () => {
                   Email
                 </p>
                 <input
+                  value={formData.email}
                   type="email"
                   name="email"
                   onChange={handleChangeInput}
@@ -142,6 +160,7 @@ const Login = () => {
                 </p>
                 <div className="relative">
                   <input
+                    value={formData.password}
                     type={showPassword ? "password" : "text"}
                     name="password"
                     onChange={handleChangeInput}

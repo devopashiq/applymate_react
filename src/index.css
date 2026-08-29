@@ -1,4 +1,10 @@
 @import "tailwindcss";
+@plugin "daisyui";
+
+html {
+  font-size: 14.4px; /* 16px × 0.9 = 14.4px, mimics 90% zoom */
+}
+
 @theme {
   /* ─── Primary ─────────────────────────────── */
   --color-primary:            #2e519e;
