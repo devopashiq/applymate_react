@@ -1,23 +1,29 @@
+import type { ReactNode } from "react";
+
 type ModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  children: ReactNode;
 };
 
-const Modal = ({ isOpen, onClose }: ModalProps) => {
+const Modal = ({ isOpen, onClose, children }: ModalProps) => {
+  if (!isOpen) {
+    return null;
+  }
+
   return (
     <div>
-      <dialog open={isOpen} className="modal">
+      <dialog open className="modal">
         <div className="modal-box">
-          <h3 className="font-bold text-lg">Hello!</h3>
-          <p className="py-4">
-            Press ESC key or click the button below to close
-          </p>
+          {children}
           <div className="modal-action">
-            <form method="dialog">
-              <button className="btn" onClick={onClose}>
-                Close
-              </button>
-            </form>
+            <button
+              type="button"
+              className="btn text-gray-500 bg-white!"
+              onClick={onClose}
+            >
+              Close
+            </button>
           </div>
         </div>
       </dialog>

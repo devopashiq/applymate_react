@@ -1,4 +1,3 @@
-import axios from "axios";
 import { getToken, setToken } from "../service/token.service";
 import { api } from "./axios";
 import { authService } from "../service/auth.service";

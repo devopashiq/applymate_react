@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { authService } from "../service/auth.service";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/auth";
 import { setToken } from "../service/token.service";
 import { useNavigate } from "react-router";
 
@@ -30,7 +30,10 @@ const Login = () => {
     event.preventDefault();
 
     if (haveAccount) {
-      const { name, ...loginData } = formData;
+      const loginData = {
+        email: formData.email,
+        password: formData.password,
+      };
       const { user } = await authService.login(loginData);
 
       setToken(user.accessToken);

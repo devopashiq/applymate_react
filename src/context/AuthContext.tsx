@@ -1,26 +1,10 @@
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
-import { clearToken, setToken } from "../service/token.service";
+import { useEffect, useState, type ReactNode } from "react";
+import { clearToken } from "../service/token.service";
 import { authService } from "../service/auth.service";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-
-}
-
-interface AuthContextType {
-  user: User | null;
-  setLoginedUser: (user: User) => void;
-  logout: () => void;
-  loading:boolean;
-}
-
-export const AuthContext = createContext<AuthContextType | null>(null);
+import { AuthContext, type AuthUser } from "./auth";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<AuthUser | null>(null);
   const [loading, setLoading] = useState(true);
 
 
@@ -48,21 +32,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(null);
   }
 
-  function setLoginedUser(user:User){
+  function setLoginedUser(user: AuthUser) {
      setUser(user);
   }
 
   return (
-    <AuthContext.Provider value={{ user, setLoginedUser,logout,loading}}>
+    <AuthContext.Provider value={{ user, setLoginedUser, logout, loading }}>
       {loading?<h1>Laoding</h1>:children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const context = useContext(AuthContext);
-  if (context === null) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
 }

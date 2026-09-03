@@ -3,14 +3,13 @@ import type { LoginDTo, RegisterDto, User } from "../types/auth";
 
 export const authService = {
   async login(data: LoginDTo) {
-    //TODO
-    //git token from reponse add into authContext save in memmory
-    //use that token to send token Authorization Header
-    //save user details to user
     const response = await authApi.login(data);
 
     return {
-      user: this.formatUserResponse(response.data.data),
+      user: this.formatUserResponse(
+        response.data.data.user,
+        response.data.data.accessToken,
+      ),
       message: response.data.message,
     };
   },
@@ -28,7 +27,7 @@ export const authService = {
     const response = await authApi.me();
     const user = response.data.data;
     return {
-      user:this.formatUserResponse(user),
+      user: this.formatUserResponse(user),
       message: response.data.message,
     };
   },
@@ -38,8 +37,7 @@ export const authService = {
     return response.data;
   },
 
-  formatUserResponse(user:User,token:string='') {
-  
+  formatUserResponse(user: User, token: string = "") {
     return {
       id: user._id,
       name: user.name,

@@ -1,5 +1,4 @@
 import { Archive, Briefcase, LayoutDashboard, Settings } from "lucide-react";
-import { NavLink } from "react-router";
 import NavItem from "./NavItem";
 
 const menuItems = [
@@ -55,12 +54,14 @@ export default function Sidebar({
 
       {/* Navigation */}
       <nav className="flex-1 space-y-2 pr-4">
-        {menuItems.map(({ label, icon: Icon, to }) => (
+        {menuItems.map(({ id, label, icon: Icon, to }) => (
           <NavItem
+            key={id}
             icon={Icon}
             label={label}
             to={to}
             desktopCollapsed={desktopCollapsed}
+            onClick={onCloseMobile}
           />
         ))}
       </nav>

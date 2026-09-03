@@ -6,13 +6,20 @@ type NavItemProps = {
   label: string;
   to: string;
   desktopCollapsed: boolean;
+  onClick?: () => void;
 };
 
-const NavItem = ({ label, icon: Icon, to, desktopCollapsed }: NavItemProps) => {
+const NavItem = ({
+  label,
+  icon: Icon,
+  to,
+  desktopCollapsed,
+  onClick,
+}: NavItemProps) => {
   return (
     <NavLink
-      key={label}
       to={to}
+      onClick={onClick}
       className={({ isActive }) =>
         `group flex items-center gap-4 py-3 uppercase tracking-widest transition-all duration-200 whitespace-nowrap 
     ${desktopCollapsed ? "rounded-l-full  pl-3" : "rounded-l-full px-4"}
