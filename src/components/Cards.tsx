@@ -12,13 +12,9 @@ type CardProps = {
 
 const Cards = ({ app, edit, remove }: CardProps) => {
   function handleRemove() {
-    const confirmed = window.confirm(
-      `Delete the application for ${app.company}?`,
-    );
-
-    if (confirmed) {
+  
       void remove(app.id);
-    }
+    
   }
 
   return (
@@ -70,6 +66,8 @@ const Cards = ({ app, edit, remove }: CardProps) => {
           </button>
         </div>
       </div>
+
+
     </div>
   );
 };

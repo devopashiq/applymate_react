@@ -48,8 +48,8 @@ const JobForm = ({ onSubmit, job, submitting = false }: JobFormProps) => {
         return;
       }
 
-      // setFormData((prev) => ({ ...prev, status: value }));
-      // return;
+      setFormData((prev) => ({ ...prev, status: value }));
+      return;
     }
 
     if (name === "company" || name === "position" || name === "description") {

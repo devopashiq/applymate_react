@@ -25,7 +25,7 @@ const MainLayout = () => {
           onMenuClick={() => setMobileOpen((prev) => !prev)}
           onCollapseClick={() => setDesktopCollapsed((prev) => !prev)}
         />
-        <main className="flex-1 overflow-y-auto pt-24 pl-8 pr-8 pb-12 bg-[#F6F5F1]">
+        <main className="flex-1 overflow-y-auto pt-4 pl-8 pr-8 pb-12 bg-[#F6F5F1]">
           <Outlet />
         </main>
       </div>

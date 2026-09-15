@@ -19,10 +19,10 @@ const Modal = ({ isOpen, onClose, children }: ModalProps) => {
           <div className="modal-action">
             <button
               type="button"
-              className="btn text-gray-500 bg-white!"
+              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2 text-gray-500 bg-white!"
               onClick={onClose}
             >
-              Close
+              ✕
             </button>
           </div>
         </div>
