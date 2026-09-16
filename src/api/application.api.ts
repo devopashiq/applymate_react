@@ -1,10 +1,20 @@
 import type { ApiResponse } from "../types/api";
-import type { CreateJobDto, JobResponse, UpdateJobDto } from "../types/job";
+import type {
+  CreateJobDto,
+  JobResponse,
+  PaginatedJobsResponse,
+  UpdateJobDto,
+} from "../types/job";
 import { api } from "./axios";
 
 export const applicationApi = {
-  loadAllApplication() {
-    return api.get<ApiResponse<JobResponse[]>>("/api/jobs/");
+  loadAllApplication(page: number, limit: number) {
+    return api.get<ApiResponse<JobResponse[] | PaginatedJobsResponse>>(
+      "/api/jobs/",
+      {
+        params: { page, limit },
+      },
+    );
   },
 
   createApplication(data: CreateJobDto) {

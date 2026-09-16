@@ -8,5 +8,9 @@ export default defineConfig({
     tailwindcss(),
   ],
 
+    optimizeDeps: {
+    include: ['react-paginate'],
+  },
+
   
 });

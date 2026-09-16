@@ -24,6 +24,14 @@ export interface JobResponse extends CreateJobDto {
   updatedAt?: string;
 }
 
+export type PaginatedJobsResponse = {
+  jobs: JobResponse[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
+};
+
 export function isJobStatus(value: string): value is JobStatus {
   return JOB_STATUSES.some((status) => status === value);
 }

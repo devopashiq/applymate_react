@@ -1,9 +1,42 @@
 import { useEffect, useState } from "react";
-import { applicationApi } from "../api/application.api";import type { CreateJobDto, JobResponse, UpdateJobDto } from "../types/job";
+import { applicationApi } from "../api/application.api";
+import type {
+  CreateJobDto,
+  JobResponse,
+  PaginatedJobsResponse,
+  UpdateJobDto,
+} from "../types/job";
 
-async function fetchApplications() {
-  const response = await applicationApi.loadAllApplication();
-  return response.data.data;
+const FIRST_PAGE = 1;
+const DEFAULT_ITEMS_PER_PAGE = 10;
+
+type ApplicationsPage = {
+  applications: JobResponse[];
+  totalItems: number;
+  totalPages: number;
+};
+
+function normalizeApplicationsResponse(
+  data: JobResponse[] | PaginatedJobsResponse,
+): ApplicationsPage {
+  if (Array.isArray(data)) {
+    return {
+      applications: data,
+      totalItems: data.length,
+      totalPages: data.length > 0 ? 1 : 0,
+    };
+  }
+
+  return {
+    applications: data.jobs,
+    totalItems: data.total,
+    totalPages: data.totalPages,
+  };
+}
+
+async function fetchApplications(page: number, limit: number) {
+  const response = await applicationApi.loadAllApplication(page, limit);
+  return normalizeApplicationsResponse(response.data.data);
 }
 
 function getErrorMessage(error: unknown) {
@@ -18,12 +51,22 @@ const useApplications = () => {
   const [applications, setApplications] = useState<JobResponse[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [itemsPerPage, setItemsPerPage] = useState(DEFAULT_ITEMS_PER_PAGE);
+  const [pageNum, setPageNum] = useState(FIRST_PAGE);
+  const [totalItems, setTotalItems] = useState(0);
+  const [totalPageCount, setTotalPageCount] = useState(0);
+
+  function applyApplicationsPage(nextPage: ApplicationsPage) {
+    setApplications(nextPage.applications);
+    setTotalItems(nextPage.totalItems);
+    setTotalPageCount(nextPage.totalPages);
+  }
 
   async function loadAll() {
     try {
       setLoading(true);
       setError(null);
-      setApplications(await fetchApplications());
+      applyApplicationsPage(await fetchApplications(pageNum, itemsPerPage));
     } catch (error) {
       setError(getErrorMessage(error));
       throw error;
@@ -37,7 +80,8 @@ const useApplications = () => {
       setLoading(true);
       setError(null);
       await applicationApi.createApplication(data);
-      setApplications(await fetchApplications());
+      setPageNum(FIRST_PAGE);
+      applyApplicationsPage(await fetchApplications(FIRST_PAGE, itemsPerPage));
     } catch (error) {
       setError(getErrorMessage(error));
       throw error;
@@ -51,7 +95,7 @@ const useApplications = () => {
       setLoading(true);
       setError(null);
       await applicationApi.updateApplication(id, data);
-      setApplications(await fetchApplications());
+      applyApplicationsPage(await fetchApplications(pageNum, itemsPerPage));
     } catch (error) {
       setError(getErrorMessage(error));
       throw error;
@@ -65,7 +109,17 @@ const useApplications = () => {
       setLoading(true);
       setError(null);
       await applicationApi.deleteApplication(id);
-      setApplications(await fetchApplications());
+      const nextPage = await fetchApplications(pageNum, itemsPerPage);
+
+      if (nextPage.applications.length === 0 && pageNum > FIRST_PAGE) {
+        const previousPage = pageNum - 1;
+        setPageNum(previousPage);
+        applyApplicationsPage(
+          await fetchApplications(previousPage, itemsPerPage),
+        );
+      } else {
+        applyApplicationsPage(nextPage);
+      }
     } catch (error) {
       setError(getErrorMessage(error));
       throw error;
@@ -79,10 +133,12 @@ const useApplications = () => {
 
     async function loadInitialApplications() {
       try {
-        const nextApplications = await fetchApplications();
+        setLoading(true);
+        setError(null);
+        const nextPage = await fetchApplications(pageNum, itemsPerPage);
 
         if (!ignore) {
-          setApplications(nextApplications);
+          applyApplicationsPage(nextPage);
         }
       } catch (error) {
         if (!ignore) {
@@ -100,7 +156,7 @@ const useApplications = () => {
     return () => {
       ignore = true;
     };
-  }, []);
+  }, [pageNum, itemsPerPage]);
 
   return {
     loadAll,
@@ -109,10 +165,14 @@ const useApplications = () => {
     remove,
     loading,
     error,
-    applications
- }
-
- 
+    applications,
+    pageNum,
+    itemsPerPage,
+    totalItems,
+    setItemsPerPage,
+    setPageNum,
+    totalPageCount,
+  };
 };
 
 export default useApplications;
